@@ -1,5 +1,6 @@
 const express = require('express')
 const exhbs = require('express-handlebars')
+const db = require('./models')
 const app = express()
 const port = 3000
 
