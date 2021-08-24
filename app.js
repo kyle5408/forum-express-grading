@@ -13,8 +13,8 @@ app.set('view engine', 'hbs')
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }))
-//passport的initialize和session要在flash前，flash才能傳遞user資訊
 app.use(passport.initialize())
+//passport的session要在flash前，flash才能傳遞user資訊
 app.use(passport.session())
 app.use(flash())
 app.use((req, res, next) => {
