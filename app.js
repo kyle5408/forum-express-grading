@@ -13,14 +13,17 @@ app.set('view engine', 'hbs')
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }))
+//passport的initialize和session要在flash前，flash才能傳遞user資訊
+app.use(passport.initialize())
+app.use(passport.session())
 app.use(flash())
 app.use((req, res, next) => {
   res.locals.success_messages = req.flash('success_messages')
   res.locals.error_messages = req.flash('error_messages')
+  res.locals.user = req.user
   next()
 })
-app.use(passport.initialize())
-app.use(passport.session())
+
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
