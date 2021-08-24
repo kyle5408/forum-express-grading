@@ -1,11 +1,14 @@
 const express = require('express')
 const exhbs = require('express-handlebars')
+const bodyParser = require('body-parser')
 const db = require('./models')
 const app = express()
 const port = 3000
 
 app.engine('hbs', exhbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
+
+app.use(bodyParser.urlencoded({extended: true }))
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
