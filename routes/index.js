@@ -31,21 +31,22 @@ module.exports = (app) => {
 
   //使用者顯示所有餐廳
   app.get('/restaurants', authenticated, restController.getRestaurants)
-  
-  //管理者顯示所有餐廳
-  app.get('/admin/restaurants', authenticatedAdmin, adminController.getRestaurants)
-  //管理者顯示指定餐廳
-  app.get('/admin/restaurants/:id', authenticatedAdmin, adminController.getRestaurant)
-
-  //管理者新建某間餐廳
-  app.get('/admin/restaurants/create', authenticatedAdmin, adminController.createRestaurant)
-  app.post('/admin/restaurants', authenticatedAdmin, adminController.postRestaurant)
 
   //管理者編輯某間餐廳
   app.get('/admin/restaurants/:id/edit', authenticatedAdmin, adminController.editRestaurant)
   app.put('/admin/restaurants/:id', authenticatedAdmin, adminController.putRestaurant)
 
+  //管理者新建某間餐廳
+  app.get('/admin/restaurants/create', authenticatedAdmin, adminController.createRestaurant)
+  app.post('/admin/restaurants', authenticatedAdmin, adminController.postRestaurant)
 
+  //管理者刪除餐廳
+  app.delete('/admin/restaurants/:id', authenticatedAdmin, adminController.deleteRestaurant)
+
+  //管理者顯示所有餐廳
+  app.get('/admin/restaurants', authenticatedAdmin, adminController.getRestaurants)
+  //管理者顯示指定餐廳
+  app.get('/admin/restaurants/:id', authenticatedAdmin, adminController.getRestaurant)
 
   //註冊
   app.get('/signup', userController.signUpPage)
