@@ -18,10 +18,10 @@ const adminController = {
       })
   },
 
+  //新增餐廳
   createRestaurant: (req, res) => {
     return res.render('admin/create')
   },
-
   postRestaurant: (req, res) => {
     if (!req.body.name) {
       req.flash('error_messages', '請輸入餐廳名稱')
@@ -36,6 +36,31 @@ const adminController = {
         res.redirect('/admin/restaurants')
       })
   },
+
+  //編輯餐廳
+  editRestaurant: (req, res) => {
+    return Restaurant.findByPk(req.params.id, { raw: true, nest: true })
+    .then( restaurant => {
+      return res.render('admin/create', { restaurant })
+    })
+  },
+  putRestaurant: (req, res) => {
+    const { name, tel, address, opening_hours, description } = req.body
+    if(!req.body.name) {
+      req.flash('error_messages', '請輸入餐廳名稱')
+      return res.redirect('back')
+    }
+    return Restaurant.findByPk(req.params.id)
+    .then(restaurant => {
+      restaurant.update({
+        name, tel, address, opening_hours, description
+      })
+      .then(restaurant => {
+        req.flash('success_messages', '餐廳編輯成功')
+        res.redirect('/admin/restaurants')
+      })
+    })
+  }
 
 
 
