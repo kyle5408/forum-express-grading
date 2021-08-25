@@ -12,6 +12,9 @@ const port = process.env.PORT || 3000
 app.engine('hbs', exhbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
 
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }))
