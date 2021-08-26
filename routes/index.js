@@ -1,20 +1,27 @@
+//for test
+const helpers = require('../_helpers')
 const restController = require('../controllers/restController')
 const adminController = require('../controllers/adminController')
 const userController = require('../controllers/userController')
 const passport = require('passport')
 const multer = require('multer')
-const upload = multer({ dest: 'temp/'})
+const upload = multer({ dest: 'temp/' })
 
 const authenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
+  // if (req.isAuthenticated()) {
+  //for test(因測試環境無法使用第三方套件函式)
+  if (helpers.ensureAuthenticated(req)) {
     return next()
   }
   res.redirect('/signin')
 }
 
 const authenticatedAdmin = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    if (req.user.isAdmin) {
+  // if (req.isAuthenticated()) {
+  //   if (req.user.isAdmin) {
+  //for test(因測試環境無法使用第三方套件函式)
+  if (helpers.ensureAuthenticated(req)) {
+    if (helpers.getUser(req).isAdmin) {
       return next()
     }
     return res.redirect('/')
@@ -36,11 +43,11 @@ module.exports = (app) => {
 
   //管理者編輯某間餐廳
   app.get('/admin/restaurants/:id/edit', authenticatedAdmin, adminController.editRestaurant)
-  app.put('/admin/restaurants/:id', authenticatedAdmin, upload.single('image'),adminController.putRestaurant)
+  app.put('/admin/restaurants/:id', authenticatedAdmin, upload.single('image'), adminController.putRestaurant)
 
   //管理者新建某間餐廳
   app.get('/admin/restaurants/create', authenticatedAdmin, adminController.createRestaurant)
-  app.post('/admin/restaurants', authenticatedAdmin, upload.single('image'),  adminController.postRestaurant)
+  app.post('/admin/restaurants', authenticatedAdmin, upload.single('image'), adminController.postRestaurant)
 
   //管理者刪除餐廳
   app.delete('/admin/restaurants/:id', authenticatedAdmin, adminController.deleteRestaurant)
