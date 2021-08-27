@@ -57,6 +57,11 @@ module.exports = (app) => {
   //管理者顯示指定餐廳
   app.get('/admin/restaurants/:id', authenticatedAdmin, adminController.getRestaurant)
 
+  //管理者顯示所有使用者
+  app.get('/admin/users', authenticatedAdmin, adminController.getUsers)
+  //管理者編輯使用者權限
+  app.put('/admin/users/:id/toggleAdmin', authenticatedAdmin, adminController.toggleAdmin)
+
   //註冊
   app.get('/signup', userController.signUpPage)
   app.post('/signup', userController.signUp)

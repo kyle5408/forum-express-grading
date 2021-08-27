@@ -1,6 +1,8 @@
+const helpers = require('../_helpers')
 const fs = require('fs')
 const db = require('../models')
 const Restaurant = db.Restaurant
+const User = db.User
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
@@ -11,6 +13,59 @@ const adminController = {
       .then(restaurants => {
         return res.render('admin/restaurants', { restaurants })
       })
+  },
+
+  //瀏覽所有使用者
+  getUsers: (req, res) => {
+    return User.findAll({ raw: true, nest: true })
+      .then(users => {
+        return res.render('admin/users', { users })
+      })
+  },
+
+
+  //管理員權限(需保留一位)
+  toggleAdmin: (req, res) => {
+    //判斷目前管理員數量
+    const admin = []
+    User.findAll({ raw: true, nest: true })
+      .then(users => {
+        for (let i = 0; i < users.length; i++) {
+          if (users[i].isAdmin === 1) {
+            admin.push(users[i])
+          }
+        }
+      })
+
+    return User.findByPk(req.params.id)
+      .then(user => {
+        let adminVol = admin.length
+        if (adminVol === 1 && user.isAdmin) {
+          req.flash('error_messages', '已為最後一位管理者')
+          return res.redirect('/admin/users')
+        } else {
+          //移除自己權限
+          if (Number(req.params.id) === helpers.getUser(req).id && user.isAdmin === true) {
+            user.update({
+              isAdmin: false
+            })
+            req.flash('success_messages', '您已成功自管理者移除')
+            return res.redirect('/restaurants')
+          } else {
+            isAdmin = !user.isAdmin ? true : false
+            return user.update({
+              isAdmin
+            })
+              .then(() => {
+                User.findAll({ raw: true, nest: true })
+                  .then(users => {
+                    return res.render('admin/users', { users })
+                  })
+              })
+          }
+        }
+      }
+      )
   },
 
   //瀏覽單筆餐廳
