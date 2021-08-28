@@ -5,6 +5,7 @@ const Restaurant = db.Restaurant
 const User = db.User
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
+const { Op } = require("sequelize")
 
 const adminController = {
   //瀏覽所有餐廳
@@ -27,19 +28,19 @@ const adminController = {
   //管理員權限(需保留一位)
   toggleAdmin: (req, res) => {
     //判斷目前管理員數量
-    const admin = []
-    User.findAll({ raw: true, nest: true })
-      .then(users => {
-        for (let i = 0; i < users.length; i++) {
-          if (users[i].isAdmin === 1) {
-            admin.push(users[i])
-          }
+    User.count({
+      where: {
+        isAdmin: {
+          [Op.eq]: true
         }
-      })
+      }
+    })
+    .then(count =>{
+      adminVol = count
+    })
 
     return User.findByPk(req.params.id)
       .then(user => {
-        let adminVol = admin.length
         if (adminVol === 1 && user.isAdmin) {
           req.flash('error_messages', '已為最後一位管理者')
           return res.redirect('/admin/users')
