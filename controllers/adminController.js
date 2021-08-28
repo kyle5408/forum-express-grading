@@ -19,28 +19,26 @@ const adminController = {
   //瀏覽所有使用者
   getUsers: (req, res) => {
     return User.findAll({ raw: true, nest: true })
-      .then(users => {
+      .then(users => { 
         return res.render('admin/users', { users })
       })
   },
 
 
   //管理員權限(需保留一位)
-  toggleAdmin: (req, res) => {
+  toggleAdmin: async (req, res) => {
     //判斷目前管理員數量
-    User.count({
-      where: {
-        isAdmin: {
-          [Op.eq]: true
+    const adminVol = await
+      User.count({
+        where: {
+          isAdmin: {
+            [Op.eq]: true
+          }
         }
-      }
-    })
-    .then(count =>{
-      adminVol = count
-    })
+      })
 
     return User.findByPk(req.params.id)
-      .then(user => {
+      .then((user) => {
         if (adminVol === 1 && user.isAdmin) {
           req.flash('error_messages', '已為最後一位管理者')
           return res.redirect('/admin/users')
