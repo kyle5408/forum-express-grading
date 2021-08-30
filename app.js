@@ -11,7 +11,12 @@ const passport = require('./config/passport')
 const app = express()
 const port = process.env.PORT || 3000
 
-app.engine('hbs', exhbs({ defaultLayout: 'main', extname: '.hbs' }))
+app.engine('hbs', exhbs({
+  defaultLayout: 'main',
+  extname: '.hbs',
+  //載入自訂helper
+  helpers: require('./config/handlebar-helpers')
+}))
 app.set('view engine', 'hbs')
 
 if (process.env.NODE_ENV !== 'production') {
