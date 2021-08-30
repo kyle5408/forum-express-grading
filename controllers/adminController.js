@@ -2,6 +2,7 @@ const helpers = require('../_helpers')
 const fs = require('fs')
 const db = require('../models')
 const Restaurant = db.Restaurant
+const Category = db.Category
 const User = db.User
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
@@ -10,7 +11,7 @@ const { Op } = require("sequelize")
 const adminController = {
   //瀏覽所有餐廳
   getRestaurants: (req, res) => {
-    return Restaurant.findAll({ raw: true, nest: true })
+    return Restaurant.findAll({ raw: true, nest: true, include: [Category] })
       .then(restaurants => {
         return res.render('admin/restaurants', { restaurants })
       })
@@ -19,7 +20,7 @@ const adminController = {
   //瀏覽所有使用者
   getUsers: (req, res) => {
     return User.findAll({ raw: true, nest: true })
-      .then(users => { 
+      .then(users => {
         return res.render('admin/users', { users })
       })
   },
@@ -69,9 +70,10 @@ const adminController = {
 
   //瀏覽單筆餐廳
   getRestaurant: (req, res) => {
-    return Restaurant.findByPk(req.params.id, { raw: true, nest: true })
+    return Restaurant.findByPk(req.params.id, { include: [Category] })
       .then(restaurant => {
-        return res.render('admin/restaurant', { restaurant })
+        console.log(restaurant.toJSON())
+        return res.render('admin/restaurant', { restaurant: restaurant.toJSON() })
       })
   },
 
