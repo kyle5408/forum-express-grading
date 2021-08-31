@@ -41,6 +41,8 @@ module.exports = (app) => {
 
   //使用者顯示所有餐廳
   app.get('/restaurants', authenticated, restController.getRestaurants)
+  //使用者顯示某間餐廳
+  app.get('/restaurants/:id', authenticated, restController.getRestaurant)
 
   //管理者編輯某間餐廳
   app.get('/admin/restaurants/:id/edit', authenticatedAdmin, adminController.editRestaurant)
