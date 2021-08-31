@@ -70,6 +70,8 @@ module.exports = (app) => {
   //管理者編輯分類
   app.get('/admin/categories/:id/edit', authenticatedAdmin, categoryController.getCategories)
   app.put('/admin/categories/:id', authenticatedAdmin, categoryController.putCategory)
+  //管理者刪除分類
+  app.delete('/admin/categories/:id', authenticatedAdmin, categoryController.deleteCategory)
 
   //註冊
   app.get('/signup', userController.signUpPage)
