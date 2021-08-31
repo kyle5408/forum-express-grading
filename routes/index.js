@@ -3,6 +3,7 @@ const helpers = require('../_helpers')
 const restController = require('../controllers/restController')
 const adminController = require('../controllers/adminController')
 const userController = require('../controllers/userController')
+const categoryController = require('../controllers/categoryController')
 const passport = require('passport')
 const multer = require('multer')
 const upload = multer({ dest: 'temp/' })
@@ -40,6 +41,9 @@ module.exports = (app) => {
 
   //使用者顯示所有餐廳
   app.get('/restaurants', authenticated, restController.getRestaurants)
+
+  //管理者顯示所有分類
+  app.get('/admin/categories', authenticatedAdmin, categoryController.getCategories)
 
   //管理者編輯某間餐廳
   app.get('/admin/restaurants/:id/edit', authenticatedAdmin, adminController.editRestaurant)
