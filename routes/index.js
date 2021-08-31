@@ -42,9 +42,6 @@ module.exports = (app) => {
   //使用者顯示所有餐廳
   app.get('/restaurants', authenticated, restController.getRestaurants)
 
-  //管理者顯示所有分類
-  app.get('/admin/categories', authenticatedAdmin, categoryController.getCategories)
-
   //管理者編輯某間餐廳
   app.get('/admin/restaurants/:id/edit', authenticatedAdmin, adminController.editRestaurant)
   app.put('/admin/restaurants/:id', authenticatedAdmin, upload.single('image'), adminController.putRestaurant)
@@ -65,6 +62,11 @@ module.exports = (app) => {
   app.get('/admin/users', authenticatedAdmin, adminController.getUsers)
   //管理者編輯使用者權限
   app.put('/admin/users/:id/toggleAdmin', authenticatedAdmin, adminController.toggleAdmin)
+
+  //管理者顯示所有分類
+  app.get('/admin/categories', authenticatedAdmin, categoryController.getCategories)
+  //管理者新增分類
+  app.post('/admin/categories', authenticatedAdmin, categoryController.postCategory)
 
   //註冊
   app.get('/signup', userController.signUpPage)
