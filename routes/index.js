@@ -67,6 +67,9 @@ module.exports = (app) => {
   app.get('/admin/categories', authenticatedAdmin, categoryController.getCategories)
   //管理者新增分類
   app.post('/admin/categories', authenticatedAdmin, categoryController.postCategory)
+  //管理者編輯分類
+  app.get('/admin/categories/:id/edit', authenticatedAdmin, categoryController.getCategories)
+  app.put('/admin/categories/:id', authenticatedAdmin, categoryController.putCategory)
 
   //註冊
   app.get('/signup', userController.signUpPage)
