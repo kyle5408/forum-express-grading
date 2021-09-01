@@ -44,6 +44,8 @@ module.exports = (app) => {
   app.get('/restaurants', authenticated, restController.getRestaurants)
   //使用者顯示某間餐廳
   app.get('/restaurants/:id', authenticated, restController.getRestaurant)
+  //使用者顯示個人頁面
+  app.get('/users/profile', authenticated, userController.getUser)
 
   //使用者新增評論
   app.post('/comments', authenticated, commentController.postComment)
@@ -89,7 +91,4 @@ module.exports = (app) => {
   app.post('/signin', passport.authenticate('local', { failureRedirect: '/signin', failureFlash: true }), userController.signIn)
   //登出
   app.get('/logout', userController.logout)
-
-
-
 }

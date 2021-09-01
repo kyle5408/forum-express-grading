@@ -7,12 +7,12 @@ const userController = {
   signUpPage: (req, res) => {
     return res.render('signup')
   },
-  
+
   signUp: (req, res) => {
     const { name, email, password, passwordCheck } = req.body
     if (req.body.passwordCheck !== req.body.password) {
       req.flash('error_messages', '確認密碼不相符!')
-      return res.render('signup', { name, email, password, passwordCheck})
+      return res.render('signup', { name, email, password, passwordCheck })
     } else {
       User.findOne({ where: { email: req.body.email } })
         .then(user => {
@@ -34,20 +34,27 @@ const userController = {
         })
     }
   },
-  
+
   signInPage: (req, res) => {
     return res.render('signin')
   },
-  
+
   signIn: (req, res) => {
     req.flash('success_messages', '成功登入!')
     res.redirect('/restaurants')
   },
-  
+
   logout: (req, res) => {
     req.flash('success_messages', '登出成功!')
     req.logout()
     res.redirect('/signin')
+  },
+
+  getUser: (req, res) => {
+    User.findByPk(req.user.id)
+      .then(user => {
+        return res.render('profile', { user: user.toJSON() })
+      })
   }
 }
 
