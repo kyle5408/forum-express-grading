@@ -20,4 +20,19 @@
 </div>
 <br />
 <br />
+
+<form action="/comments" method="POST">
+  <div class="form-group">
+    <label for="text">留下評論:</label>
+    <textarea class="form-control" id="text" name="text" rows="3" placeholder="請輸入你的評論..."></textarea>
+  </div>
+  {{!-- 使用hidden隱藏，但這個欄位會幫忙把 restaurant.id 送到後端 --}}
+  <input type="hidden" name="restaurantId" value="{{restaurant.id}}" />
+  <button type="submit" class="btn btn-primary">送出</button>
+</form>
+
+
+
+
+
 <a href="javascript:history.back()">回上一頁</a>
