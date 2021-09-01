@@ -21,9 +21,11 @@
           </li>
           <li class="mt-2"><strong>帳號建立時間:</strong> {{momentDate user.createdAt}}</li>
           <li class="mt-2"><strong>上次更新:</strong> {{moment user.updatedAt}}</li>
+          {{#ifCond edit true}}
           <button type="button" class="btn btn-outline-link mt-2">
             <a href="#">編輯</a>
           </button>
+          {{/ifCond}}
         </ul>
       </div>
     </div>
