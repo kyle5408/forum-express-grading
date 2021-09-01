@@ -17,8 +17,17 @@ const commentController = {
       req.flash('error_messages', '請輸入評論內容')
       return res.redirect('back')
     }
-  }
+  },
 
+  deleteComment: (req, res) => {
+    return Comment.findByPk(req.params.id)
+      .then(comment => {
+        comment.destroy()
+          .then(comment => {
+            res.redirect(`/restaurants/${comment.RestaurantId}`)
+          })
+      })
+  }
 }
 
 module.exports = commentController

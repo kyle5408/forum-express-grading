@@ -47,6 +47,8 @@ module.exports = (app) => {
 
   //使用者新增評論
   app.post('/comments', authenticated, commentController.postComment)
+  //管理者刪除評論
+  app.delete('/comments/:id', authenticatedAdmin, commentController.deleteComment)
 
   //管理者編輯某間餐廳
   app.get('/admin/restaurants/:id/edit', authenticatedAdmin, adminController.editRestaurant)
