@@ -31,3 +31,29 @@
 </div>
 <br />
 <br />
+
+<nav aria-label="...">
+  <ul class="pagination">
+    <li class="page-item disabled">
+      <a class="page-link" href="/restaurants?page={{pagePre}}&categoryId={{categoryId}}" tabindex="-1"
+        aria-disabled="true">
+        <span aria-hidden="true">&laquo;</span>
+        </a>
+    </li>
+    {{#each totalPage}}
+    {{#ifCond this ../pageNow}}
+    <li class="page-item active"><a class="page-link"
+        href="/restaurants?page={{this}}&categoryId={{../categoryId}}">{{this}}</a></li>
+    {{else}}
+    <li class="page-item"><a class="page-link"
+        href="/restaurants?page={{this}}&categoryId={{../categoryId}}">{{this}}</a>
+    </li>
+    {{/ifCond}}
+    {{/each}}
+    <li class="page-item">
+      <a class="page-link" href="/restaurants?page={{pageNext}}&categoryId={{categoryId}}">
+      <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
