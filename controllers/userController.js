@@ -2,6 +2,7 @@
 const bcrypt = require('bcryptjs')
 const db = require('../models')
 const User = db.User
+const fs = require('fs')
 
 const userController = {
   signUpPage: (req, res) => {
@@ -57,6 +58,62 @@ const userController = {
       .then(user => {
         return res.render('profile', { user: user.toJSON(), edit })
       })
+  },
+
+  editUser: (req, res) => {
+    let edit = (Number(req.params.id) === req.user.id) ? true : false
+    if (!edit) {
+      req.flash('error_messages', '無修改此使用者權限')
+      return res.redirect('back')
+    } else {
+      return User.findByPk(req.user.id)
+        .then(user => {
+          res.render('editProfile', { user: user.toJSON() })
+        })
+    }
+  },
+
+  putUser: (req, res) => {
+    let edit = (Number(req.params.id) === req.user.id) ? true : false
+    if (!edit) {
+      req.flash('error_messages', '無修改此使用者權限')
+      return res.redirect('back')
+    } else {
+      const { file } = req
+      if (file) {
+        fs.readFile(file.path, (err, data) => {
+          if (err) console.log('Error:', err)
+          fs.writeFile(`upload/${file.originalname}`, data, () => {
+            return User.findByPk(req.user.id)
+              .then(user => {
+                user.update({
+                  name: req.body.name,
+                  email: req.body.email,
+                  image: file ? `/upload/${file.originalname}` : user.image
+                })
+                  .then(() => {
+                    req.flash('success_messages', '個人資料更新成功')
+                    return res.redirect(`/users/${req.user.id}`)
+                  })
+              })
+          })
+        })
+      } else {
+        return User.findByPk(req.user.id)
+          .then(user => {
+            user.update({
+              name: req.body.name,
+              email: req.body.email,
+              image: user.image
+            })
+              .then(user => {
+                req.flash('success_messages', '個人資料更新成功')
+                return res.redirect(`/users/${req.user.id}`)
+              })
+          })
+
+      }
+    }
   }
 }
 

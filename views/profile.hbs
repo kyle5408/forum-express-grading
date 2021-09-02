@@ -5,7 +5,7 @@
     <div class="d-flex col-md-12">
       <div class="image col-md-6">
         <img class="card-img-top"
-          src="https://lh3.googleusercontent.com/proxy/3yBUsiFFGAcd4d8nPQnlfPAU_M9P-hNdlnLJSJFjRDOYTDwGePhzE4pkjkyH42ZR7_jk6saOoX3MkA30R5J8gbf30vAXLOEfeblt-yppLZ08RjlYCk2oiE1iLsv3AvSpNrpnXRyOtQi1WBp0aOh99NuAaeU4ACBStW6UlzU4BHQivR1ulA"
+          src="{{user.image}}"
           alt="Card image cap">
       </div>
       <div class="col-md-6 mt-2 ml-2">
@@ -23,7 +23,7 @@
           <li class="mt-2"><strong>上次更新:</strong> {{moment user.updatedAt}}</li>
           {{#ifCond edit true}}
           <button type="button" class="btn btn-outline-link mt-2">
-            <a href="#">編輯</a>
+            <a href="/users/{{user.id}}/edit">編輯</a>
           </button>
           {{/ifCond}}
         </ul>
