@@ -32,11 +32,11 @@ describe('# A17: 使用者權限管理', function () {
     });
 
     after(async () => {
-      this.ensureAuthenticated.restore();
-      this.getUser.restore();
-      await db.User.destroy({ where: {}, truncate: true })
-      await db.Restaurant.destroy({ where: {}, truncate: true })
-      await db.sequelize.truncate()
+      this.ensureAuthenticated.restore()
+      this.getUser.restore()
+      await db.sequelize.query('SET FOREIGN_KEY_CHECKS = 0', null, { raw: true })
+      await db.User.destroy({ where: {}, truncate: true, force: true, })
+      await db.sequelize.query('SET FOREIGN_KEY_CHECKS = 1', null, { raw: true })
     })
 
   })
@@ -70,11 +70,11 @@ describe('# A17: 使用者權限管理', function () {
     });
 
     after(async () => {
-      this.ensureAuthenticated.restore();
-      this.getUser.restore();
-      await db.User.destroy({ where: {}, truncate: true })
-      await db.Restaurant.destroy({ where: {}, truncate: true })
-      await db.sequelize.truncate()
+      this.ensureAuthenticated.restore()
+      this.getUser.restore()
+      await db.sequelize.query('SET FOREIGN_KEY_CHECKS = 0', null, { raw: true })
+      await db.User.destroy({ where: {}, truncate: true, force: true, })
+      await db.sequelize.query('SET FOREIGN_KEY_CHECKS = 1', null, { raw: true })
     })
 
   })
