@@ -1,6 +1,8 @@
 const bcrypt = require('bcryptjs')
 const db = require('../models')
 const User = db.User
+const Comment = db.Comment
+const Restaurant = db.Restaurant
 const fs = require('fs')
 const helpers = require('../_helpers')
 
@@ -55,8 +57,19 @@ const userController = {
     let edit = (Number(req.params.id) === Number(helpers.getUser(req).id)) ? true : false
     User.findByPk(req.params.id)
       .then(user => {
-        return res.render('profile', { user: user.toJSON(), edit })
+        Comment.findAndCountAll({ raw: true, nest: true, include: [Restaurant], where: { UserId: user.id } })
+          .then(result => {
+            //運用展開運算子把Restaurant的資料和comment組合傳給前端(要result.rows[i].Restaurant才能讀到資料，否則會是undefined)
+            const commentRestaurant = result.rows.map(comment => ({
+              ...comment,
+              restaurantName: comment.Restaurant.name,
+              restaurantImage: comment.Restaurant.image
+            }))
+            return res.render('profile', { user: user.toJSON(), edit, count: result.count, comments: commentRestaurant })
+          })
       })
+
+
   },
 
   editUser: (req, res) => {
