@@ -1,8 +1,8 @@
-
 const bcrypt = require('bcryptjs')
 const db = require('../models')
 const User = db.User
 const fs = require('fs')
+const helpers = require('../_helpers')
 
 const userController = {
   signUpPage: (req, res) => {
@@ -52,21 +52,20 @@ const userController = {
   },
 
   getUser: (req, res) => {
-    let id = req.params.id || req.user.id
-    let edit = (Number(req.params.id) === req.user.id) ? true : false
-    User.findByPk(id)
+    let edit = (Number(req.params.id) === Number(helpers.getUser(req).id)) ? true : false
+    User.findByPk(req.params.id)
       .then(user => {
         return res.render('profile', { user: user.toJSON(), edit })
       })
   },
 
   editUser: (req, res) => {
-    let edit = (Number(req.params.id) === req.user.id) ? true : false
+    let edit = (Number(req.params.id) === Number(helpers.getUser(req).id)) ? true : false
     if (!edit) {
       req.flash('error_messages', '無修改此使用者權限')
       return res.redirect('back')
     } else {
-      return User.findByPk(req.user.id)
+      return User.findByPk(req.params.id)
         .then(user => {
           res.render('editProfile', { user: user.toJSON() })
         })
@@ -74,7 +73,7 @@ const userController = {
   },
 
   putUser: (req, res) => {
-    let edit = (Number(req.params.id) === req.user.id) ? true : false
+    let edit = (Number(req.params.id) === Number(helpers.getUser(req).id)) ? true : false
     if (!edit) {
       req.flash('error_messages', '無修改此使用者權限')
       return res.redirect('back')
@@ -84,7 +83,7 @@ const userController = {
         fs.readFile(file.path, (err, data) => {
           if (err) console.log('Error:', err)
           fs.writeFile(`upload/${file.originalname}`, data, () => {
-            return User.findByPk(req.user.id)
+            return User.findByPk(req.params.id)
               .then(user => {
                 user.update({
                   name: req.body.name,
@@ -93,13 +92,13 @@ const userController = {
                 })
                   .then(() => {
                     req.flash('success_messages', '個人資料更新成功')
-                    return res.redirect(`/users/${req.user.id}`)
+                    return res.redirect(`/users/${req.params.id}`)
                   })
               })
           })
         })
       } else {
-        return User.findByPk(req.user.id)
+        return User.findByPk(req.params.id)
           .then(user => {
             user.update({
               name: req.body.name,
@@ -108,7 +107,7 @@ const userController = {
             })
               .then(user => {
                 req.flash('success_messages', '個人資料更新成功')
-                return res.redirect(`/users/${req.user.id}`)
+                return res.redirect(`/users/${helpers.getUser(req).id}`)
               })
           })
 
