@@ -5,6 +5,8 @@ const Comment = db.Comment
 const Restaurant = db.Restaurant
 const fs = require('fs')
 const helpers = require('../_helpers')
+const imgur = require('imgur-node-api')
+const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
 const userController = {
   signUpPage: (req, res) => {
@@ -93,21 +95,23 @@ const userController = {
     } else {
       const { file } = req
       if (file) {
-        fs.readFile(file.path, (err, data) => {
+        imgur.setClientID(IMGUR_CLIENT_ID)
+        imgur.upload(file.path, (err, img) => {
           if (err) console.log('Error:', err)
-          fs.writeFile(`upload/${file.originalname}`, data, () => {
+          // fs.writeFile(`upload/${file.originalname}`, data, () => {
             return User.findByPk(req.params.id)
               .then(user => {
                 user.update({
                   name: req.body.name,
                   email: req.body.email,
-                  image: file ? `/upload/${file.originalname}` : user.image
+                  image: file ? img.data.link : user.image
+                  // image: file ? `/upload/${file.originalname}` : user.image
                 })
                   .then(() => {
                     req.flash('success_messages', '個人資料更新成功')
                     return res.redirect(`/users/${req.params.id}`)
                   })
-              })
+              // })
           })
         })
       } else {
