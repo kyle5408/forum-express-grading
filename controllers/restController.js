@@ -1,4 +1,4 @@
-const { raw } = require('body-parser')
+const helpers = require('../_helpers')
 const db = require('../models')
 const Restaurant = db.Restaurant
 const Category = db.Category
@@ -56,8 +56,9 @@ const restController = {
       include: [Category, { model: User, as: 'FavoritedUsers' },{model:User, as: 'LikedUsers'}, { model: Comment, include: [User] }]
     })
       .then(restaurant => {
-        const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
-        const isLiked = restaurant.LikedUsers.map(d => d.id).includes(req.user.id)
+        const userId = helpers.getUser(req).id
+        const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(userId)
+        const isLiked = restaurant.LikedUsers.map(d => d.id).includes(userId)
         return res.render('restaurant', { restaurant: restaurant.toJSON(), isFavorited, isLiked })
       })
   },
