@@ -35,7 +35,9 @@ const restController = {
           ...r,
           description: r.description.substring(0, 50),
           categoryName: r.Category.name,
-          isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(r.id)
+          isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(r.id),
+          //藉由passport的反序列化取出like的餐廳
+          isLiked: req.user.LikedRestaurants.map(d => d.id).includes(r.id)
         }))
         Category.findAll({
           raw: true,
@@ -51,12 +53,12 @@ const restController = {
     Restaurant.findByPk(req.params.id, {
       // raw: true,
       // nest: true,
-      include: [Category, { model: User, as: 'FavoritedUsers' }, { model: Comment, include: [User] }]
+      include: [Category, { model: User, as: 'FavoritedUsers' },{model:User, as: 'LikedUsers'}, { model: Comment, include: [User] }]
     })
       .then(restaurant => {
-        console.log(restaurant.toJSON())
         const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
-        return res.render('restaurant', { restaurant: restaurant.toJSON(), isFavorited })
+        const isLiked = restaurant.LikedUsers.map(d => d.id).includes(req.user.id)
+        return res.render('restaurant', { restaurant: restaurant.toJSON(), isFavorited, isLiked })
       })
   },
 

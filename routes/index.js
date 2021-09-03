@@ -59,6 +59,11 @@ module.exports = (app) => {
   //使用者移除最愛
   app.delete('/favorite/:restaurantId', authenticated, userController.removeFavorite)
 
+  //使用者加入Like
+  app.post('/like/:restaurantId', authenticated, userController.addLike)
+  //使用者移除Like
+  app.delete('/like/:restaurantId', authenticated, userController.removeLike)
+
   //使用者新增評論
   app.post('/comments', authenticated, commentController.postComment)
   //管理者刪除評論

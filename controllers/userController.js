@@ -4,6 +4,7 @@ const User = db.User
 const Comment = db.Comment
 const Restaurant = db.Restaurant
 const Favorite = db.Favorite
+const Like = db.Like
 const fs = require('fs')
 const helpers = require('../_helpers')
 const imgur = require('imgur-node-api')
@@ -140,6 +141,7 @@ const userController = {
         RestaurantId: req.params.restaurantId
       })
         .then(restaurant => {
+          req.flash('success_messages', '已成功加入最愛')
           return res.redirect('back')
         })
     }
@@ -158,6 +160,42 @@ const userController = {
       })
         .then(favorite => {
           favorite.destroy()
+          req.flash('error_messages', '已移除最愛')
+          return res.redirect('back')
+        })
+    }
+    catch (err) {
+      console.log(err)
+    }
+  },
+
+  addLike: async (req, res) => {
+    try {
+      await Like.create({
+        UserId: req.user.id,
+        RestaurantId: req.params.restaurantId
+      })
+        .then(restaurant => {
+          req.flash('success_messages', '已成功Like')
+          return res.redirect('back')
+        })
+    }
+    catch (err) {
+      console.log(err)
+    }
+  },
+
+  removeLike: async (req, res) => {
+    try {
+      await Like.findOne({
+        where: {
+          UserId: req.user.id,
+          RestaurantId: req.params.restaurantId
+        }
+      })
+        .then(like => {
+          like.destroy()
+          req.flash('error_messages', '已Unlike')
           return res.redirect('back')
         })
     }
