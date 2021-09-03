@@ -74,6 +74,14 @@ const restController = {
     catch (err) {
       console.log('catch', err)
     }
+  },
+
+  getRestaurantDashboard: (req, res) => {
+    Comment.findAndCountAll({ raw: true, nest: true, include: [Restaurant], where: { RestaurantId: req.params.id } })
+      .then(result => {
+        res.render('dashboard', { count: result.count })
+      })
+
   }
 
   //Promise寫法
