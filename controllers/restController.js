@@ -76,12 +76,31 @@ const restController = {
     }
   },
 
-  getRestaurantDashboard: (req, res) => {
-    Comment.findAndCountAll({ raw: true, nest: true, include: [Restaurant], where: { RestaurantId: req.params.id } })
-      .then(result => {
-        res.render('dashboard', { count: result.count })
-      })
+  getRestaurantDashboard: async (req, res) => {
+    try {
+      const comment = await Comment.findAndCountAll({ raw: true, nest: true, include: [Restaurant], where: { RestaurantId: req.params.id } })
+      const restaurant = await Restaurant.findByPk(req.params.id, { raw: true, nest: true, include: [Category] })
+      res.render('dashboard', { count: comment.count, restaurant })
+    }
+    catch (err) {
+      console.log(err)
+    }
+    // Comment.findAndCountAll({ raw: true, nest: true, include: [Restaurant], where: { RestaurantId: req.params.id } })
+    // .then(result => {
 
+    //   res.render('dashboard', { count: result.count })
+    // })
+  },
+
+  getRestaurantCount: (req, res, next) => {
+    Restaurant.findByPk(req.params.id)
+      .then(restaurant => {
+        const viewCounts = restaurant.viewCounts + 1
+        restaurant.update({
+          viewCounts: viewCounts
+        })
+      })
+    return next()
   }
 
   //Promise寫法

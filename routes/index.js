@@ -31,6 +31,7 @@ const authenticatedAdmin = (req, res, next) => {
   res.redirect('/signin')
 }
 
+
 module.exports = (app) => {
 
   app.get('/', authenticated, (req, res) => {
@@ -41,10 +42,10 @@ module.exports = (app) => {
   })
 
   //使用者顯示所有餐廳
-  app.get('/restaurants', authenticated, restController.getRestaurants) 
+  app.get('/restaurants', authenticated, restController.getRestaurants)
   app.get('/restaurants/feeds', authenticated, restController.getFeeds)
   //使用者顯示某間餐廳
-  app.get('/restaurants/:id', authenticated, restController.getRestaurant)
+  app.get('/restaurants/:id', authenticated, restController.getRestaurantCount, restController.getRestaurant)
   //使用者顯示某間餐廳Dashboard
   app.get('/restaurants/:id/dashboard', authenticated, restController.getRestaurantDashboard)
   //使用者顯示個人頁面

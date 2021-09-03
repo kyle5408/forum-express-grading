@@ -1,20 +1,20 @@
 <div class="col-md-12">
   <div>
-  <h1>餐廳名稱</h1>
-  <span>Category</span>
-  </ul>
+    <h1>{{restaurant.name}}</h1>
+    <span>{{restaurant.Category.name}}</span>
+    </ul>
 
-</div>
-<hr />
+  </div>
+  <hr />
 
-<div class="mt-5 mb-2">
-  <ul class="list-group">
-    <li class="mt-2">評論數：{{count}}</li>
-    <li class="mt-2">瀏覽次數：1</li>
-    <li class="mt-2">收藏數：1</li>
+  <div class="mt-5 mb-2">
+    <ul class="list-group">
+      <li class="mt-2">評論數：{{count}}</li>
+      <li class="mt-2">瀏覽次數：{{restaurant.viewCounts}}</li>
+      <li class="mt-2">收藏數：1</li>
 
-  </ul>
-</div>
+    </ul>
+  </div>
 
-<a href="javascript:history.back()">回上一頁</a>
+  <a href="javascript:history.back()">回上一頁</a>
 </div>
