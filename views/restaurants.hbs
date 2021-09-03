@@ -33,9 +33,14 @@
         </p>
         <span class="badge badge-secondary">{{this.categoryName}}</span>
         <p class="card-text">{{this.description}}</p>
+        {{#if this.isFavorited}}
         <form action="/favorite/{{this.id}}?_method=DELETE" method="POST"><button type="submit"
             class="btn btn-danger">移除最愛</button></form>
-        <form action="/favorite/{{this.id}}" method="POST"><button type="submit" class="btn btn-primary">加到最愛</button></form>
+        {{else}}
+        <form action="/favorite/{{this.id}}" method="POST"><button type="submit" class="btn btn-primary">加到最愛</button>
+        </form>
+        {{/if}}
+
       </div>
     </div>
   </div>
@@ -50,7 +55,7 @@
       <a class="page-link" href="/restaurants?page={{pagePre}}&categoryId={{categoryId}}" tabindex="-1"
         aria-disabled="true">
         <span aria-hidden="true">&laquo;</span>
-        </a>
+      </a>
     </li>
     {{#each totalPage}}
     {{#ifCond this ../pageNow}}
@@ -64,7 +69,7 @@
     {{/each}}
     <li class="page-item">
       <a class="page-link" href="/restaurants?page={{pageNext}}&categoryId={{categoryId}}">
-      <span aria-hidden="true">&raquo;</span>
+        <span aria-hidden="true">&raquo;</span>
       </a>
     </li>
   </ul>
