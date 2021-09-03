@@ -1,3 +1,4 @@
+const { raw } = require('body-parser')
 const db = require('../models')
 const Restaurant = db.Restaurant
 const Category = db.Category
@@ -50,22 +51,76 @@ const restController = {
       .then(restaurant => {
         return res.render('restaurant', { restaurant: restaurant.toJSON() })
       })
-  }
-}
+  },
 
-// const restController = {
-//   getRestaurants: (req, res) => {
-//     Restaurant.findAll({ include: [Category] }).then(restaurants => {
-//       const data = restaurants.map(r => ({
-//         ...r.dataValues,
-//         description: r.dataValues.description.substring(0, 50),
-//         categoryName: r.Category.name
-//       }))
-//       return res.render('restaurants', {
-//         restaurants: data
-//       })
-//     })
-//   }
-// }
+  getFeeds: async (req, res) => {
+    try {
+      restaurants = await Restaurant.findAll({
+        limit: 10,
+        raw: true,
+        nest: true,
+        order: [['createdAt', 'DESC']],
+        include: [Category]
+      })
+      comments = await Comment.findAll({
+        limit: 10,
+        raw: true,
+        nest: true,
+        order: [['createdAt', 'DESC']],
+        include: [User, Restaurant]
+      })
+      return res.render('feeds', { restaurants, comments })
+    }
+    catch (err) {
+      console.log('catch', err)
+    }
+  }
+
+  //Promise寫法
+  // getFeeds: (req, res) => {
+  //   return Promise.all([
+  //     Restaurant.findAll({
+  //     limit: 10,
+  //     raw: true,
+  //     nest: true,
+  //     order: [['createdAt', 'DESC']],
+  //     include: [Category]
+  //   }), 
+  //   Comment.findAll({
+  //     limit: 10,
+  //     raw: true,
+  //     nest: true,
+  //     order: [['createdAt', 'DESC']],
+  //     include: [User, Restaurant]
+  //   })
+  // ])
+  //     .then(([restaurants,comments]) => {
+  //           return res.render('feeds', { restaurants, comments })
+  //     })
+  // }
+
+  // callback寫法
+  // getFeeds: (req, res) => {
+  //   return Restaurant.findAll({
+  //     limit: 10,
+  //     raw: true,
+  //     nest: true,
+  //     order: [['createdAt', 'DESC']],
+  //     include: [Category]
+  //   })
+  //     .then(restaurants => {
+  //       Comment.findAll({
+  //         limit: 10,
+  //         raw: true,
+  //         nest: true,
+  //         order: [['createdAt', 'DESC']],
+  //         include: [User, Restaurant]
+  //       })
+  //         .then(comments => {
+  //           return res.render('feeds', { restaurants, comments })
+  //         })
+  //     })
+  // }
+}
 
 module.exports = restController

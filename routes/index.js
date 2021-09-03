@@ -41,7 +41,8 @@ module.exports = (app) => {
   })
 
   //使用者顯示所有餐廳
-  app.get('/restaurants', authenticated, restController.getRestaurants)
+  app.get('/restaurants', authenticated, restController.getRestaurants) 
+  app.get('/restaurants/feeds', authenticated, restController.getFeeds)
   //使用者顯示某間餐廳
   app.get('/restaurants/:id', authenticated, restController.getRestaurant)
   //使用者顯示個人頁面
