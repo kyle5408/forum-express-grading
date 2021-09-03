@@ -54,6 +54,11 @@ module.exports = (app) => {
   app.get('/users/:id/edit', authenticated, userController.editUser)
   app.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
 
+  //使用者加入最愛
+  app.post('/favorite/:restaurantId', authenticated, userController.addFavorite)
+  //使用者移除最愛
+  app.delete('/favorite/:restaurantId', authenticated, userController.removeFavorite)
+
   //使用者新增評論
   app.post('/comments', authenticated, commentController.postComment)
   //管理者刪除評論
