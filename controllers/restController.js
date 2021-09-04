@@ -5,6 +5,7 @@ const Category = db.Category
 const Comment = db.Comment
 const User = db.User
 const pageLimit = 10
+const Sequelize = require('sequelize')
 
 const restController = {
   getRestaurants: (req, res) => {
@@ -53,7 +54,7 @@ const restController = {
     Restaurant.findByPk(req.params.id, {
       // raw: true,
       // nest: true,
-      include: [Category, { model: User, as: 'FavoritedUsers' },{model:User, as: 'LikedUsers'}, { model: Comment, include: [User] }]
+      include: [Category, { model: User, as: 'FavoritedUsers' }, { model: User, as: 'LikedUsers' }, { model: Comment, include: [User] }]
     })
       .then(restaurant => {
         const userId = helpers.getUser(req).id
@@ -106,53 +107,27 @@ const restController = {
         })
       })
     return next()
+  },
+
+  getTopRestaurant: (req, res) => {
+    Restaurant.findAll({
+      include: [{
+        model: User, as: 'FavoritedUsers'
+      }]
+    })
+      .then(restaurants => {
+        const userId = helpers.getUser(req).id
+        restaurants = restaurants.map(restaurant => ({
+          ...restaurant.dataValues,
+          description: restaurant.description.substring(0, 50),
+          favoritedCount: restaurant.FavoritedUsers.length,
+          isFavorited: restaurant.FavoritedUsers.map(d => d.id).includes(userId)
+        }))
+        restaurants = restaurants.sort((a, b) => b.favoritedCount - a.favoritedCount)
+        restaurants = restaurants.slice(0, 10)
+        res.render('topRestaurant', { restaurants })
+      })
   }
-
-  //Promise寫法
-  // getFeeds: (req, res) => {
-  //   return Promise.all([
-  //     Restaurant.findAll({
-  //     limit: 10,
-  //     raw: true,
-  //     nest: true,
-  //     order: [['createdAt', 'DESC']],
-  //     include: [Category]
-  //   }), 
-  //   Comment.findAll({
-  //     limit: 10,
-  //     raw: true,
-  //     nest: true,
-  //     order: [['createdAt', 'DESC']],
-  //     include: [User, Restaurant]
-  //   })
-  // ])
-  //     .then(([restaurants,comments]) => {
-  //           return res.render('feeds', { restaurants, comments })
-  //     })
-  // }
-
-  // callback寫法
-  // getFeeds: (req, res) => {
-  //   return Restaurant.findAll({
-  //     limit: 10,
-  //     raw: true,
-  //     nest: true,
-  //     order: [['createdAt', 'DESC']],
-  //     include: [Category]
-  //   })
-  //     .then(restaurants => {
-  //       Comment.findAll({
-  //         limit: 10,
-  //         raw: true,
-  //         nest: true,
-  //         order: [['createdAt', 'DESC']],
-  //         include: [User, Restaurant]
-  //       })
-  //         .then(comments => {
-  //           return res.render('feeds', { restaurants, comments })
-  //         })
-  //     })
-  // }
 }
 
 module.exports = restController

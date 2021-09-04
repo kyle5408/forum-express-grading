@@ -138,7 +138,7 @@ const userController = {
   addFavorite: async (req, res) => {
     try {
       const userId = helpers.getUser(req).id
-      const restaurant = await Favorite.create({
+      await Favorite.create({
         UserId: userId,
         RestaurantId: req.params.restaurantId
       })
@@ -173,7 +173,7 @@ const userController = {
   addLike: async (req, res) => {
     try {
       const userId = helpers.getUser(req).id
-      const restaurant = await Like.create({
+      await Like.create({
         UserId: userId,
         RestaurantId: req.params.restaurantId
       })

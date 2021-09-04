@@ -1,0 +1,55 @@
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link" href="/restaurants">首頁</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/restaurants/feeds">最新動態</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/users/top">美食達人</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link  active" href="/restaurants/top">Top10 人氣餐廳</a>
+  </li>
+</ul>
+<br /><br />
+<h1>人氣餐廳</h1>
+<hr />
+<div class="row" style="text-align: center;">
+
+
+  {{#each restaurants}}
+  <div class="card mb-3 col-md-12">
+    <div class="row g-0">
+      <div class="col-md-4 d-flex">
+        <img src="{{this.image}}" class="img-fluid rounded-start align-items-enter justify-content-center" alt="...">
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <a href="/restaurants/{{this.id}}">
+            <h5 class="card-title" style="text-align: left">{{this.name}}</h5>
+          </a>
+          <p class="card-text" style="text-align: left">{{this.description}}</p>
+          <div style="text-align: left">
+            <div class="badge badge-secondary mb-2">
+              <strong>
+                追蹤人數：{{this.favoritedCount}}
+              </strong>
+            </div>
+            <div style="text-align: left">
+              {{#if this.isFavorited}}
+              <form action="/favorite/{{this.id}}?_method=DELETE" method="POST"><button type="submit"
+                  class="btn btn-danger">移除最愛</button></form>
+              {{else}}
+              <form action="/favorite/{{this.id}}" method="POST"><button type="submit"
+                  class="btn btn-primary">加到最愛</button>
+              </form>
+              {{/if}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{/each}}
+</div>
