@@ -65,6 +65,10 @@ module.exports = (app) => {
   app.post('/like/:restaurantId', authenticated, userController.addLike)
   //使用者移除Like
   app.delete('/like/:restaurantId', authenticated, userController.removeLike)
+  //使用者追蹤
+  app.post('/following/:userId', authenticated, userController.addFollowing)
+  //使用者取消追蹤
+  app.delete('/following/:userId', authenticated, userController.removeFollowing)
 
   //使用者新增評論
   app.post('/comments', authenticated, commentController.postComment)

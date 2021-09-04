@@ -5,6 +5,7 @@ const Comment = db.Comment
 const Restaurant = db.Restaurant
 const Favorite = db.Favorite
 const Like = db.Like
+const Followship = db.Followship
 const fs = require('fs')
 const helpers = require('../_helpers')
 const imgur = require('imgur-node-api')
@@ -205,16 +206,52 @@ const userController = {
   getTopUser: (req, res) => {
     User.findAll({ include: [{ model: User, as: 'Followers' }] })
       .then(users => {
+        const userId = helpers.getUser(req).id
+
         users = users.map(user => ({
           ...user.dataValues,
           FollowerCount: user.Followers.length,
           //這邊的user已經用展開運算子，所以可以直接抓user.id
-          isFollowed: req.user.Followings.map(d => d.id).includes(user.id)
+          isFollowed: req.user.Followings.map(d => d.id).includes(user.id),
+          isUser: user.id === userId
         }))
         users = users.sort((a, b) => b.FollowerCount - a.FollowerCount)
         return res.render('topUser', { users })
       })
-  }
+  },
+
+  addFollowing: async (req, res) => {
+    try {
+      const userId = helpers.getUser(req).id
+      await Followship.create({
+        followerId: userId,
+        followingId: req.params.userId,
+      })
+      req.flash('success_messages', '已成功追蹤')
+      return res.redirect('back')
+    }
+    catch (err) {
+      console.log(err)
+    }
+  },
+
+  removeFollowing: async (req, res) => {
+    try {
+      const userId = helpers.getUser(req).id
+      const followShip = await Followship.findOne({
+        where: {
+          followerId: userId,
+          followingId: req.params.userId
+        }
+      })
+      await followShip.destroy()
+      req.flash('error_messages', '已取消追蹤')
+      return res.redirect('back')
+    }
+    catch (err) {
+      console.log(err)
+    }
+  },
 }
 
 module.exports = userController
