@@ -48,6 +48,8 @@ module.exports = (app) => {
   app.get('/restaurants/:id', authenticated, restController.getRestaurantCount, restController.getRestaurant)
   //使用者顯示某間餐廳Dashboard
   app.get('/restaurants/:id/dashboard', authenticated, restController.getRestaurantDashboard)
+  //使用者顯示美食達人(要放在 GET /users/:id 的前面，不然 /users/top 會被優先用 /users/:id 的結構來解析)
+  app.get('/users/top', authenticated, userController.getTopUser)
   //使用者顯示個人頁面
   app.get('/users/:id', authenticated, userController.getUser)
   //使用者編輯個人頁面
