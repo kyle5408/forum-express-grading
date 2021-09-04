@@ -207,7 +207,7 @@ const userController = {
       .then(users => {
         users = users.map(user => ({
           ...user.dataValues,
-          Followers: user.Followers.length,
+          FollowerCount: user.Followers.length,
           //這邊的user已經用展開運算子，所以可以直接抓user.id
           isFollowed: req.user.Followings.map(d => d.id).includes(user.id)
         }))
