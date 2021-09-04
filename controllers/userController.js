@@ -137,14 +137,13 @@ const userController = {
   addFavorite: async (req, res) => {
     try {
       const userId = helpers.getUser(req).id
-      await Favorite.create({
+      const restaurant = await Favorite.create({
         UserId: userId,
         RestaurantId: req.params.restaurantId
       })
-        .then(restaurant => {
-          req.flash('success_messages', '已成功加入最愛')
-          return res.redirect('back')
-        })
+      req.flash('success_messages', '已成功加入最愛')
+      return res.redirect('back')
+
     }
     catch (err) {
       console.log(err)
@@ -154,17 +153,16 @@ const userController = {
   removeFavorite: async (req, res) => {
     try {
       const userId = helpers.getUser(req).id
-      await Favorite.findOne({
+      const favorite = await Favorite.findOne({
         where: {
           UserId: userId,
           RestaurantId: req.params.restaurantId
         }
       })
-        .then(favorite => {
-          favorite.destroy()
-          req.flash('error_messages', '已移除最愛')
-          return res.redirect('back')
-        })
+      await favorite.destroy()
+      req.flash('error_messages', '已移除最愛')
+      return res.redirect('back')
+
     }
     catch (err) {
       console.log(err)
@@ -174,14 +172,12 @@ const userController = {
   addLike: async (req, res) => {
     try {
       const userId = helpers.getUser(req).id
-      await Like.create({
+      const restaurant = await Like.create({
         UserId: userId,
         RestaurantId: req.params.restaurantId
       })
-        .then(restaurant => {
-          req.flash('success_messages', '已成功Like')
-          return res.redirect('back')
-        })
+      req.flash('success_messages', '已成功Like')
+      return res.redirect('back')
     }
     catch (err) {
       console.log(err)
@@ -191,17 +187,15 @@ const userController = {
   removeLike: async (req, res) => {
     try {
       const userId = helpers.getUser(req).id
-      await Like.findOne({
+      const like = await Like.findOne({
         where: {
           UserId: userId,
           RestaurantId: req.params.restaurantId
         }
       })
-        .then(like => {
-          like.destroy()
-          req.flash('error_messages', '已Unlike')
-          return res.redirect('back')
-        })
+      await like.destroy()
+      req.flash('error_messages', '已Unlike')
+      return res.redirect('back')
     }
     catch (err) {
       console.log(err)
