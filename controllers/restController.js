@@ -90,8 +90,8 @@ const restController = {
   getRestaurantDashboard: async (req, res) => {
     try {
       const comment = await Comment.findAndCountAll({ raw: true, nest: true, include: [Restaurant], where: { RestaurantId: req.params.id } })
-      const restaurant = await Restaurant.findByPk(req.params.id, { raw: true, nest: true, include: [Category] })
-      res.render('dashboard', { count: comment.count, restaurant })
+      const restaurant = await Restaurant.findAll({ raw: true, nest: true, include: [Category, { model: User, as: 'FavoritedUsers' }], where: { id: req.params.id } })
+      res.render('dashboard', { count: comment.count, restaurant: restaurant[0], favoritedCount: restaurant.length })
     }
     catch (err) {
       console.log(err)

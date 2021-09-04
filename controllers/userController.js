@@ -58,23 +58,35 @@ const userController = {
     res.redirect('/signin')
   },
 
-  getUser: (req, res) => {
-    let edit = (Number(req.params.id) === Number(helpers.getUser(req).id)) ? true : false
-    User.findByPk(req.params.id)
-      .then(user => {
-        Comment.findAndCountAll({ raw: true, nest: true, include: [Restaurant], where: { UserId: user.id } })
-          .then(result => {
-            //運用展開運算子把Restaurant的資料和comment組合傳給前端(要result.rows[i].Restaurant才能讀到資料，否則會是undefined)
-            const commentRestaurant = result.rows.map(comment => ({
-              ...comment,
-              restaurantName: comment.Restaurant.name,
-              restaurantImage: comment.Restaurant.image
-            }))
-            return res.render('profile', { user: user.toJSON(), edit, count: result.count, comments: commentRestaurant })
-          })
-      })
+  getUser: async (req, res) => {
+    const userId = helpers.getUser(req).id
+    let edit = (Number(req.params.id) === Number(userId)) ? true : false
+    const user = await User.findByPk(userId, {
+      include: [
+        { model: User, as: 'Followers', attributes: ['image', 'id'] },
+        { model: User, as: 'Followings', attributes: ['image', 'id'] },
+        { model: Restaurant, as: 'FavoritedRestaurants', attributes: ['image', 'id'] }
+      ]
+    })
+    const result = await Comment.findAndCountAll({ raw: true, nest: true, include: [Restaurant], where: { UserId: user.id } })
+    const commentCount = result.count
+    const followingCount = user.Followings.length
+    const followerCount = user.Followers.length
+    const favoritedRestaurantCount = user.FavoritedRestaurants.length
 
-
+    //運用展開運算子把Restaurant的資料和comment組合傳給前端(要result.rows[i].Restaurant才能讀到資料，否則會是undefined)
+    const commentRestaurant = result.rows.map(comment => ({
+      ...comment,
+      restaurantName: comment.Restaurant.name,
+      restaurantImage: comment.Restaurant.image,
+      restaurantId: comment.Restaurant.id
+    }))
+    //運用set和filter去除陣列重複物件
+    const restaurantSet = new Set()
+    const commentRestaurantFilter = commentRestaurant.filter(item => {
+      return restaurantSet.has(item.restaurantId) ? false : restaurantSet.add(item.restaurantId)
+    })
+    return res.render('profile', { user: user.toJSON(), edit, comments: commentRestaurantFilter, commentCount, followingCount, followerCount, favoritedRestaurantCount })
   },
 
   editUser: (req, res) => {
@@ -107,7 +119,7 @@ const userController = {
               user.update({
                 name: req.body.name,
                 email: req.body.email,
-                image: file ? img.data.link : user.image
+                image: file ? img.data.link : null
                 // image: file ? `/upload/${file.originalname}` : user.image
               })
                 .then(() => {
@@ -207,7 +219,6 @@ const userController = {
     User.findAll({ include: [{ model: User, as: 'Followers' }] })
       .then(users => {
         const userId = helpers.getUser(req).id
-
         users = users.map(user => ({
           ...user.dataValues,
           FollowerCount: user.Followers.length,

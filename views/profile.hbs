@@ -31,31 +31,66 @@
   </div>
 </div>
 
+{{!-- 使用者追蹤區 --}}
 <div class="row mt-2">
-  <div class="card col-md-12">
+  {{!-- 追蹤中 --}}
+  <div class="card col-md-6">
     <div class="card-body">
-      <h5 class="card-title">{{count}}個評論:</h5>
+      <h5 class="card-title"><strong>{{followingCount}}</strong> followings:</h5>
 
-      {{#each comments}}
-      <div class="card col-md-12 mt-2">
-        <div class="d-flex">
-          <div class="col-md-4">
-            <img class="card-img-top" src="{{this.restaurantImage}}" alt="Card image cap">
-          </div>
-          <div class="col-md-8"><a href="/restaurants/{{this.RestaurantId}}">
-              <strong>{{this.restaurantName}}</strong>
-            </a>
+      {{#each user.Followings}}
+      <a href="/users/{{this.id}}">
+        <img src="{{this.image}}" alt="Card image cap" style="width: 80px; height: 80px">
+      </a>
+      {{/each}}
 
-            <div>評論內容:</div>
-            <div class="mt-2">{{this.text}}</div>
-          </div>
-        </div>
-      </div>
+    </div>
+  </div>
+
+  {{!-- 追蹤者 --}}
+  <div class="card col-md-6">
+    <div class="card-body">
+      <h5 class="card-title"><strong>{{followerCount}}</strong> followers:</h5>
+
+      {{#each user.Followers}}
+      <a href="/users/{{this.RestaurantId}}">
+        <img src="{{this.image}}" alt="Card image cap" style="width: 80px; height: 80px">
+      </a>
       {{/each}}
 
     </div>
   </div>
 
 </div>
+
+{{!-- 餐廳收藏區 --}}
+<div class="row mt-2">
+  <div class="card col-md-6">
+    <div class="card-body">
+      <h5 class="card-title">
+        <strong>{{favoritedRestaurantCount}}</strong> 收藏的餐廳:</h5>
+      {{#each user.FavoritedRestaurants}}
+      <a href="/restaurants/{{this.id}}">
+        <img src="{{this.image}}" alt="Card image cap" style="width: 80px; height: 80px">
+      </a>
+      {{/each}}
+    </div>
+  </div>
+
+  <div class="card col-md-6">
+    <div class="card-body">
+      <h5 class="card-title"><strong>{{commentCount}}</strong> 已評論餐廳(不重複顯示):</h5>
+      {{#each comments}}
+      <a href="/restaurants/{{this.RestaurantId}}">
+        <img src="{{this.restaurantImage}}" alt="Card image cap" style="width: 80px; height: 80px">
+      </a>
+      {{/each}}
+    </div>
+  </div>
+</div>
+
+
+
+
 
 <a href="javascript:history.back()">回上一頁</a>
