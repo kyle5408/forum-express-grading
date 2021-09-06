@@ -61,7 +61,7 @@ const userController = {
   getUser: async (req, res) => {
     const userId = helpers.getUser(req).id
     let edit = (Number(req.params.id) === Number(userId)) ? true : false
-    const user = await User.findByPk(userId, {
+    const user = await User.findByPk(req.params.id, {
       include: [
         { model: User, as: 'Followers', attributes: ['image', 'id'] },
         { model: User, as: 'Followings', attributes: ['image', 'id'] },

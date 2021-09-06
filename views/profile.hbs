@@ -53,7 +53,7 @@
       <h5 class="card-title"><strong>{{followerCount}}</strong> followers:</h5>
 
       {{#each user.Followers}}
-      <a href="/users/{{this.RestaurantId}}">
+      <a href="/users/{{this.id}}">
         <img src="{{this.image}}" alt="Card image cap" style="width: 80px; height: 80px">
       </a>
       {{/each}}
@@ -68,7 +68,8 @@
   <div class="card col-md-6">
     <div class="card-body">
       <h5 class="card-title">
-        <strong>{{favoritedRestaurantCount}}</strong> 收藏的餐廳:</h5>
+        <strong>{{favoritedRestaurantCount}}</strong> 收藏的餐廳:
+      </h5>
       {{#each user.FavoritedRestaurants}}
       <a href="/restaurants/{{this.id}}">
         <img src="{{this.image}}" alt="Card image cap" style="width: 80px; height: 80px">
