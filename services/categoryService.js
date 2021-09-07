@@ -19,19 +19,21 @@ const categoryService = {
     })
   },
 
-  // postCategory: (req, res) => {
-  //   if (!req.body.name) {
-  //     req.flash('error_messages', '名稱不得為空')
-  //     return res.redirect('back')
-  //   } else {
-  //     Category.create({
-  //       name: req.body.name
-  //     })
-  //       .then(category => {
-  //         return res.redirect('/admin/categories')
-  //       })
-  //   }
-  // },
+  postCategory: (req, res, callback) => {
+    if (!req.body.name) {
+      return callback({ status: 'error', message: '名稱不得為空' })
+      // req.flash('error_messages', '名稱不得為空')
+      // return res.redirect('back')
+    } else {
+      Category.create({
+        name: req.body.name
+      })
+        .then(category => {
+          callback({ status: 'success', message: '類別建立成功' })
+          // return res.redirect('/admin/categories')
+        })
+    }
+  },
 
   // putCategory: (req, res) => {
   //   if (!req.body.name) {
