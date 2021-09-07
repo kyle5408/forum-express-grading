@@ -26,6 +26,17 @@ const adminService = {
       })
   },
 
+  //刪除餐廳
+  deleteRestaurant: (req, res, callback) => {
+    return Restaurant.findByPk(req.params.id)
+      .then(restaurant => {
+        restaurant.destroy()
+          .then(restaurant => {
+            callback({ status: 'success', message: '' })
+          })
+      })
+  }
+
   // //瀏覽所有使用者
   // getUsers: (req, res) => {
   //   return User.findAll({ raw: true, nest: true })
@@ -191,17 +202,6 @@ const adminService = {
   //           })
   //       })
   //   }
-  // },
-
-  // //刪除餐廳
-  // deleteRestaurant: (req, res) => {
-  //   return Restaurant.findByPk(req.params.id)
-  //     .then(restaurant => {
-  //       restaurant.destroy()
-  //         .then(restaurant => {
-  //           res.redirect('/admin/restaurants')
-  //         })
-  //     })
   // }
 }
 

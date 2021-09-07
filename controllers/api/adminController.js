@@ -16,9 +16,16 @@ const adminController = {
   //瀏覽單筆餐廳
   getRestaurant: (req, res) => {
     adminService.getRestaurant(req, res, data => {
-      return res.render('admin/restaurant', data)
+      return res.json(data)
     })
   },
+
+  //刪除餐廳
+  deleteRestaurant: (req, res) => {
+    adminService.deleteRestaurant(req, res, data => {
+      return res.json(data)
+    })
+  }
 }
 
 module.exports = adminController
