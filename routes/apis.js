@@ -13,5 +13,7 @@ router.get('/admin/categories', categoryController.getCategories)
 router.delete('/admin/restaurants/:id', adminController.deleteRestaurant)
 //建立餐廳
 router.post('/admin/restaurants', upload.single('image'), adminController.postRestaurant)
+//管理者編輯某間餐廳
+router.put('/admin/restaurants/:id', upload.single('image'), adminController.putRestaurant)
 
 module.exports = router

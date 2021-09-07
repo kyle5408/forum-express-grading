@@ -85,6 +85,69 @@ const adminService = {
     }
   },
 
+  //編輯餐廳
+  putRestaurant: (req, res, callback) => {
+    const { name, tel, address, opening_hours, description } = req.body
+    if (!req.body.name) {
+      return callback({ status: 'error', message: '請輸入餐廳名稱' })
+      // req.flash('error_messages', '請輸入餐廳名稱')
+      // return res.redirect('back')
+    }
+    //增加圖片上傳
+    const { file } = req
+    if (file) {
+      imgur.setClientID(IMGUR_CLIENT_ID)
+      imgur.upload(file.path, (err, img) => {
+        return Restaurant.findByPk(req.params.id)
+          .then(restaurant => {
+            restaurant.update({
+              name,
+              tel,
+              address,
+              opening_hours,
+              description,
+              image: file ? img.data.link : restaurant.image,
+              CategoryId: req.body.categoryId
+            })
+              .then(restaurant => {
+                return callback({ status: 'success', message: '餐廳編輯成功'})
+                // req.flash('success_messages', '餐廳編輯成功')
+                // res.redirect('/admin/restaurants')
+              })
+          })
+      })
+
+    } else {
+      //update和destroy不用把資料拆解
+      return Restaurant.findByPk(req.params.id)
+        .then(restaurant => {
+          restaurant.update({
+            name,
+            tel,
+            address,
+            opening_hours,
+            description,
+            image: restaurant.image,
+            CategoryId: req.body.categoryId
+          })
+            .then(restaurant => {
+              return callback({ status: 'success', message: '餐廳編輯成功' })
+              // req.flash('success_messages', '餐廳編輯成功')
+              // res.redirect('/admin/restaurants')
+            })
+        })
+    }
+  },
+
+  //   editRestaurant: (req, res) => {
+  //   Category.findAll({ raw: true, nest: true })
+  //     .then(categories => {
+  //       return Restaurant.findByPk(req.params.id)
+  //         .then(restaurant => {
+  //           return res.render('admin/create', { restaurant: restaurant.toJSON(), categories })
+  //         })
+  //     })
+  // },
 
   // //瀏覽所有使用者
   // getUsers: (req, res) => {
@@ -150,65 +213,7 @@ const adminService = {
 
   // },
 
-  // //編輯餐廳
-  // editRestaurant: (req, res) => {
-  //   Category.findAll({ raw: true, nest: true })
-  //     .then(categories => {
-  //       return Restaurant.findByPk(req.params.id)
-  //         .then(restaurant => {
-  //           return res.render('admin/create', { restaurant: restaurant.toJSON(), categories })
-  //         })
-  //     })
-  // },
-  // putRestaurant: (req, res) => {
-  //   const { name, tel, address, opening_hours, description } = req.body
-  //   if (!req.body.name) {
-  //     req.flash('error_messages', '請輸入餐廳名稱')
-  //     return res.redirect('back')
-  //   }
-  //   //增加圖片上傳
-  //   const { file } = req
-  //   if (file) {
-  //     imgur.setClientID(IMGUR_CLIENT_ID)
-  //     imgur.upload(file.path, (err, img) => {
-  //       return Restaurant.findByPk(req.params.id)
-  //         .then(restaurant => {
-  //           restaurant.update({
-  //             name,
-  //             tel,
-  //             address,
-  //             opening_hours,
-  //             description,
-  //             image: file ? img.data.link : restaurant.image,
-  //             CategoryId: req.body.categoryId
-  //           })
-  //             .then(restaurant => {
-  //               req.flash('success_messages', '餐廳編輯成功')
-  //               res.redirect('/admin/restaurants')
-  //             })
-  //         })
-  //     })
 
-  //   } else {
-  //     //update和destroy不用把資料拆解
-  //     return Restaurant.findByPk(req.params.id)
-  //       .then(restaurant => {
-  //         restaurant.update({
-  //           name,
-  //           tel,
-  //           address,
-  //           opening_hours,
-  //           description,
-  //           image: restaurant.image,
-  //           CategoryId: req.body.categoryId
-  //         })
-  //           .then(restaurant => {
-  //             req.flash('success_messages', '餐廳編輯成功')
-  //             res.redirect('/admin/restaurants')
-  //           })
-  //       })
-  //   }
-  // }
 }
 
 module.exports = adminService

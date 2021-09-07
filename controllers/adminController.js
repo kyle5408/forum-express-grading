@@ -90,15 +90,15 @@ const adminController = {
 
   },
   postRestaurant: (req, res) => {
-      adminService.postRestaurant(req, res, data => {
-        if (data['status'] === 'error') {
-          req.flash('error_messages', data['message'])
-          return res.redirect('back')
-        } else {
-          req.flash('success_messages', data['message'])
-          res.redirect('/admin/restaurants')
-        }
-      })
+    adminService.postRestaurant(req, res, data => {
+      if (data['status'] === 'error') {
+        req.flash('error_messages', data['message'])
+        return res.redirect('back')
+      } else {
+        req.flash('success_messages', data['message'])
+        res.redirect('/admin/restaurants')
+      }
+    })
   },
 
   //編輯餐廳
@@ -112,53 +112,15 @@ const adminController = {
       })
   },
   putRestaurant: (req, res) => {
-    const { name, tel, address, opening_hours, description } = req.body
-    if (!req.body.name) {
-      req.flash('error_messages', '請輸入餐廳名稱')
-      return res.redirect('back')
-    }
-    //增加圖片上傳
-    const { file } = req
-    if (file) {
-      imgur.setClientID(IMGUR_CLIENT_ID)
-      imgur.upload(file.path, (err, img) => {
-        return Restaurant.findByPk(req.params.id)
-          .then(restaurant => {
-            restaurant.update({
-              name,
-              tel,
-              address,
-              opening_hours,
-              description,
-              image: file ? img.data.link : restaurant.image,
-              CategoryId: req.body.categoryId
-            })
-              .then(restaurant => {
-                req.flash('success_messages', '餐廳編輯成功')
-                res.redirect('/admin/restaurants')
-              })
-          })
-      })
-
-    } else {
-      //update和destroy不用把資料拆解
-      return Restaurant.findByPk(req.params.id)
-        .then(restaurant => {
-          restaurant.update({
-            name,
-            tel,
-            address,
-            opening_hours,
-            description,
-            image: restaurant.image,
-            CategoryId: req.body.categoryId
-          })
-            .then(restaurant => {
-              req.flash('success_messages', '餐廳編輯成功')
-              res.redirect('/admin/restaurants')
-            })
-        })
-    }
+    adminService.putRestaurant(req, res, data => {
+      if (data['status'] === 'error') {
+        req.flash('error_messages', data['message'])
+        return res.redirect('back')
+      } else {
+        req.flash('success_messages', data['message'])
+        res.redirect('/admin/restaurants')
+      }
+    })
   },
 
   //刪除餐廳

@@ -27,13 +27,19 @@ const adminController = {
     })
   },
 
+  //建立餐廳
   postRestaurant: (req, res) => {
     adminService.postRestaurant(req, res, data => {
       return res.json(data)
     })
+  },
 
+  //編輯餐廳
+  putRestaurant: (req, res) => {
+    adminService.putRestaurant(req, res, data => {
+      return res.json(data)
+    })
   }
-
 }
 
 module.exports = adminController
