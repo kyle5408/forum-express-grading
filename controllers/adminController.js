@@ -90,47 +90,15 @@ const adminController = {
 
   },
   postRestaurant: (req, res) => {
-    const { name, tel, address, opening_hours, description } = req.body
-    if (!req.body.name) {
-      req.flash('error_messages', '請輸入餐廳名稱')
-      return res.redirect('back')
-    }
-    //增加圖片上傳
-    const { file } = req
-    if (file) {
-      imgur.setClientID(IMGUR_CLIENT_ID)
-      imgur.readFile(file.path, (err, img) => {
-        return Restaurant.create({
-          name,
-          tel,
-          address,
-          opening_hours,
-          description,
-          //條件運算子(條件 ? 值1 : 值2)，如果條件(file)為true，回傳值1(`upload/${file.originalname}`)，否則回傳值2(null)
-          image: file ? img.data.link : null,
-          CategoryId: req.body.categoryId
-        })
-          .then(restaurant => {
-            req.flash('success_messages', '餐廳建立成功')
-            res.redirect('/admin/restaurants')
-          })
-
-      })
-    } else {
-      return Restaurant.create({
-        name,
-        tel,
-        address,
-        opening_hours,
-        description,
-        image: null,
-        CategoryId: req.body.categoryId
-      })
-        .then(restaurant => {
-          req.flash('success_messages', '餐廳建立成功')
+      adminService.postRestaurant(req, res, data => {
+        if (data['status'] === 'error') {
+          req.flash('error_messages', data['message'])
+          return res.redirect('back')
+        } else {
+          req.flash('success_messages', data['message'])
           res.redirect('/admin/restaurants')
-        })
-    }
+        }
+      })
   },
 
   //編輯餐廳

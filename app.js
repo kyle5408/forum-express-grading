@@ -24,6 +24,8 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 app.use(bodyParser.urlencoded({ extended: true }))
+//開啟bodyParser表單檔案傳輸功能
+app.use(bodyParser.json())
 app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }))
 app.use(passport.initialize())
 //passport的session要在flash前，flash才能傳遞user資訊

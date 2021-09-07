@@ -35,7 +35,56 @@ const adminService = {
             callback({ status: 'success', message: '' })
           })
       })
-  }
+  },
+
+  //建立餐廳
+  postRestaurant: (req, res, callback) => {
+    const { name, tel, address, opening_hours, description } = req.body
+    if (!req.body.name) {
+      callback({ status: 'error', message: '請輸入餐廳名稱' })
+      // req.flash('error_messages', '請輸入餐廳名稱')
+      // return res.redirect('back')
+    }
+    //增加圖片上傳
+    const { file } = req
+    if (file) {
+      imgur.setClientID(IMGUR_CLIENT_ID)
+      imgur.upload(file.path, (err, img) => {
+        return Restaurant.create({
+          name,
+          tel,
+          address,
+          opening_hours,
+          description,
+          //條件運算子(條件 ? 值1 : 值2)，如果條件(file)為true，回傳值1(`upload/${file.originalname}`)，否則回傳值2(null)
+          image: file ? img.data.link : null,
+          CategoryId: req.body.categoryId
+        })
+          .then(restaurant => {
+            callback({ status: 'success', message: '餐廳建立成功' })
+            // req.flash('success_messages', '餐廳建立成功')
+            // res.redirect('/admin/restaurants')
+          })
+
+      })
+    } else {
+      return Restaurant.create({
+        name,
+        tel,
+        address,
+        opening_hours,
+        description,
+        image: null,
+        CategoryId: req.body.categoryId
+      })
+        .then(restaurant => {
+          callback({ status: 'success', message: '餐廳建立成功' })
+          // req.flash('success_messages', '餐廳建立成功')
+          // res.redirect('/admin/restaurants')
+        })
+    }
+  },
+
 
   // //瀏覽所有使用者
   // getUsers: (req, res) => {
@@ -99,49 +148,6 @@ const adminService = {
   //       return res.render('admin/create', { categories })
   //     })
 
-  // },
-  // postRestaurant: (req, res) => {
-  //   const { name, tel, address, opening_hours, description } = req.body
-  //   if (!req.body.name) {
-  //     req.flash('error_messages', '請輸入餐廳名稱')
-  //     return res.redirect('back')
-  //   }
-  //   //增加圖片上傳
-  //   const { file } = req
-  //   if (file) {
-  //     imgur.setClientID(IMGUR_CLIENT_ID)
-  //     imgur.readFile(file.path, (err, img) => {
-  //       return Restaurant.create({
-  //         name,
-  //         tel,
-  //         address,
-  //         opening_hours,
-  //         description,
-  //         //條件運算子(條件 ? 值1 : 值2)，如果條件(file)為true，回傳值1(`upload/${file.originalname}`)，否則回傳值2(null)
-  //         image: file ? img.data.link : null,
-  //         CategoryId: req.body.categoryId
-  //       })
-  //         .then(restaurant => {
-  //           req.flash('success_messages', '餐廳建立成功')
-  //           res.redirect('/admin/restaurants')
-  //         })
-
-  //     })
-  //   } else {
-  //     return Restaurant.create({
-  //       name,
-  //       tel,
-  //       address,
-  //       opening_hours,
-  //       description,
-  //       image: null,
-  //       CategoryId: req.body.categoryId
-  //     })
-  //       .then(restaurant => {
-  //         req.flash('success_messages', '餐廳建立成功')
-  //         res.redirect('/admin/restaurants')
-  //       })
-  //   }
   // },
 
   // //編輯餐廳
