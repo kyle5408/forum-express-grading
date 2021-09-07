@@ -17,5 +17,7 @@ router.post('/admin/restaurants', upload.single('image'), adminController.postRe
 router.put('/admin/restaurants/:id', upload.single('image'), adminController.putRestaurant)
 //管理者新增分類
 router.post('/admin/categories', categoryController.postCategory)
+//管理者編輯分類
+router.put('/admin/categories/:id', categoryController.putCategory)
 
 module.exports = router

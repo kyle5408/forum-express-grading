@@ -35,22 +35,24 @@ const categoryService = {
     }
   },
 
-  // putCategory: (req, res) => {
-  //   if (!req.body.name) {
-  //     req.flash('error_messages', '名稱不得為空')
-  //     return res.redirect('back')
-  //   } else {
-  //     Category.findByPk(req.params.id)
-  //       .then(category => {
-  //         category.update({
-  //           name: req.body.name
-  //         })
-  //           .then(category => {
-  //             res.redirect('/admin/categories')
-  //           })
-  //       })
-  //   }
-  // },
+  putCategory: (req, res, callback) => {
+    if (!req.body.name) {
+      return callback({ status: 'error', message: '名稱不得為空'})
+      // req.flash('error_messages', '名稱不得為空')
+      // return res.redirect('back')
+    } else {
+      Category.findByPk(req.params.id)
+        .then(category => {
+          category.update({
+            name: req.body.name
+          })
+            .then(category => {
+              callback({ status: 'success', message: '類別更新成功' })
+              // res.redirect('/admin/categories')
+            })
+        })
+    }
+  },
 
   // deleteCategory: (req, res) => {
   //   return Category.findByPk(req.params.id)
