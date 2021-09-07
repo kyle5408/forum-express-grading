@@ -8,13 +8,14 @@ const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 const { Op } = require("sequelize")
 
+const adminService = require('../services/adminService')
+
 const adminController = {
   //瀏覽所有餐廳
   getRestaurants: (req, res) => {
-    return Restaurant.findAll({ raw: true, nest: true, include: [Category] })
-      .then(restaurants => {
-        return res.render('admin/restaurants', { restaurants })
-      })
+    adminService.getRestaurants(req, res, data => {
+      return res.render('admin/restaurants',  data )
+    })
   },
 
   //瀏覽所有使用者
