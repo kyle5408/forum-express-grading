@@ -39,13 +39,22 @@ const categoryController = {
   },
 
   deleteCategory: (req, res) => {
-    return Category.findByPk(req.params.id)
-      .then(category => {
-        category.destroy()
-          .then(() => {
-            res.redirect('/admin/categories')
-          })
-      })
+    categoryService.deleteCategory(req, res, data => {
+      if (data['status'] !== 'success') {
+        req.flash('error_messages', '類別刪除失敗')
+        return res.redirect('back')
+      } else {
+        req.flash('success_messages', '類別刪除成功')
+        res.redirect('/admin/categories')
+      }
+    })
+    // return Category.findByPk(req.params.id)
+    //   .then(category => {
+    //     category.destroy()
+    //       .then(() => {
+    //         res.redirect('/admin/categories')
+    //       })
+    //   })
   }
 }
 module.exports = categoryController

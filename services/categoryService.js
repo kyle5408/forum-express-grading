@@ -37,7 +37,7 @@ const categoryService = {
 
   putCategory: (req, res, callback) => {
     if (!req.body.name) {
-      return callback({ status: 'error', message: '名稱不得為空'})
+      return callback({ status: 'error', message: '名稱不得為空' })
       // req.flash('error_messages', '名稱不得為空')
       // return res.redirect('back')
     } else {
@@ -54,14 +54,15 @@ const categoryService = {
     }
   },
 
-  // deleteCategory: (req, res) => {
-  //   return Category.findByPk(req.params.id)
-  //     .then(category => {
-  //       category.destroy()
-  //         .then(() => {
-  //           res.redirect('/admin/categories')
-  //         })
-  //     })
-  // }
+  deleteCategory: (req, res, callback) => {
+    return Category.findByPk(req.params.id)
+      .then(category => {
+        category.destroy()
+          .then(() => {
+            callback({ status: 'success', message: '類別刪除成功' })
+            // res.redirect('/admin/categories')
+          })
+      })
+  }
 }
 module.exports = categoryService
