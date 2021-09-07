@@ -14,7 +14,14 @@ const adminController = {
   //瀏覽所有餐廳
   getRestaurants: (req, res) => {
     adminService.getRestaurants(req, res, data => {
-      return res.render('admin/restaurants',  data )
+      return res.render('admin/restaurants', data)
+    })
+  },
+
+  //瀏覽單筆餐廳
+  getRestaurant: (req, res, callback) => {
+    adminService.getRestaurant(req, res, data => {
+      return res.render('admin/restaurant', data)
     })
   },
 
@@ -69,14 +76,7 @@ const adminController = {
       )
   },
 
-  //瀏覽單筆餐廳
-  getRestaurant: (req, res) => {
-    return Restaurant.findByPk(req.params.id, { include: [Category] })
-      .then(restaurant => {
-        console.log(restaurant.toJSON())
-        return res.render('admin/restaurant', { restaurant: restaurant.toJSON() })
-      })
-  },
+
 
   //新增餐廳
   createRestaurant: (req, res) => {

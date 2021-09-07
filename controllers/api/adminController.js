@@ -11,7 +11,14 @@ const adminController = {
     adminService.getRestaurants(req, res, data => {
       return res.json(data)
     })
-  }
+  },
+
+  //瀏覽單筆餐廳
+  getRestaurant: (req, res) => {
+    adminService.getRestaurant(req, res, data => {
+      return res.render('admin/restaurant', data)
+    })
+  },
 }
 
 module.exports = adminController

@@ -17,6 +17,15 @@ const adminService = {
       })
   },
 
+
+  //瀏覽單筆餐廳
+  getRestaurant: (req, res, callback) => {
+    return Restaurant.findByPk(req.params.id, { raw: true, nest: true, include: [Category] })
+      .then(restaurant => {
+        callback({ restaurant })
+      })
+  },
+
   // //瀏覽所有使用者
   // getUsers: (req, res) => {
   //   return User.findAll({ raw: true, nest: true })
@@ -68,13 +77,6 @@ const adminService = {
   //     )
   // },
 
-  // //瀏覽單筆餐廳
-  // getRestaurant: (req, res) => {
-  //   return Restaurant.findByPk(req.params.id, { include: [Category] })
-  //     .then(restaurant => {
-  //       return res.render('admin/restaurant', { restaurant: restaurant.toJSON() })
-  //     })
-  // },
 
   // //新增餐廳
   // createRestaurant: (req, res) => {
