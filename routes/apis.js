@@ -6,22 +6,34 @@ const upload = multer({ dest: 'temp/' })
 const adminController = require('../controllers/api/adminController.js')
 const categoryController = require('../controllers/api/categoryController.js')
 const userController = require('../controllers/api/userController')
+const passport = require('../config/passport')
 
-router.get('/admin/restaurants/:id', adminController.getRestaurant)
-router.get('/admin/restaurants', adminController.getRestaurants)
-router.get('/admin/categories', categoryController.getCategories)
+const authenticated = passport.authenticate('jwt', { session: false })
+
+const authenticatedAdmin = (req, res, next) => {
+  if (req.user) {
+    if (req.user.isAdmin) { return next() }
+    return res.json({ status: 'error', message: 'permission denied' })
+  } else {
+    return res.json({ status: 'error', message: 'permission denied' })
+  }
+}
+
+router.get('/admin/restaurants/:id', authenticated, authenticatedAdmin, adminController.getRestaurant)
+router.get('/admin/restaurants', authenticated, authenticatedAdmin,  adminController.getRestaurants)
+router.get('/admin/categories', authenticated, authenticatedAdmin,  categoryController.getCategories)
 //刪除餐廳
-router.delete('/admin/restaurants/:id', adminController.deleteRestaurant)
+router.delete('/admin/restaurants/:id', authenticated, authenticatedAdmin,  adminController.deleteRestaurant)
 //建立餐廳
-router.post('/admin/restaurants', upload.single('image'), adminController.postRestaurant)
+router.post('/admin/restaurants', authenticated, authenticatedAdmin, upload.single('image'), adminController.postRestaurant)
 //管理者編輯某間餐廳
-router.put('/admin/restaurants/:id', upload.single('image'), adminController.putRestaurant)
+router.put('/admin/restaurants/:id', authenticated, authenticatedAdmin, upload.single('image'), adminController.putRestaurant)
 //管理者新增分類
-router.post('/admin/categories', categoryController.postCategory)
+router.post('/admin/categories', authenticated, authenticatedAdmin,  categoryController.postCategory)
 //管理者編輯分類
-router.put('/admin/categories/:id', categoryController.putCategory)
+router.put('/admin/categories/:id', authenticated, authenticatedAdmin, categoryController.putCategory)
 //管理者刪除分類
-router.delete('/admin/categories/:id', categoryController.deleteCategory)
+router.delete('/admin/categories/:id', authenticated, authenticatedAdmin,  categoryController.deleteCategory)
 
 //JWT signin
 router.post('/signin', userController.signIn)

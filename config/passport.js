@@ -39,4 +39,31 @@ passport.deserializeUser((id, cb) => {
     })
 })
 
+//JWT
+const jwt = require('jsonwebtoken')
+const passportJWT = require('passport-jwt')
+const ExtractJwt = passportJWT.ExtractJwt
+const JwtStrategy = passportJWT.Strategy
+
+let jwtOptions = {}
+jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken()
+//app.js的引用順序讓config讀不到環境變數，要把passport的引入往後放
+jwtOptions.secretOrKey = process.env.JWT_SECRET
+
+
+let strategy = new JwtStrategy(jwtOptions, function (jwt_payload, next) {
+  User.findByPk(jwt_payload.id, {
+    include: [
+      { model: Restaurant, as: 'FavoritedRestaurants' },
+      { model: Restaurant, as: 'LikedRestaurants' },
+      { model: User, as: 'Followers' },
+      { model: User, as: 'Followings' }
+    ]
+  }).then(user => {
+    if (!user) return next(null, false)
+    return next(null, user)
+  })
+})
+passport.use(strategy)
+
 module.exports = passport

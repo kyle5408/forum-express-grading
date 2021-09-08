@@ -7,7 +7,6 @@ const helpers = require('./_helpers')
 const session = require('express-session')
 const methodOverride = require('method-override')
 const db = require('./models')
-const passport = require('./config/passport')
 const app = express()
 const port = process.env.PORT || 3000
 
@@ -22,6 +21,8 @@ app.set('view engine', 'hbs')
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
+
+const passport = require('./config/passport')
 
 app.use(bodyParser.urlencoded({ extended: true }))
 //開啟bodyParser表單檔案傳輸功能
