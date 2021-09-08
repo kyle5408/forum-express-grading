@@ -5,6 +5,7 @@ const upload = multer({ dest: 'temp/' })
 
 const adminController = require('../controllers/api/adminController.js')
 const categoryController = require('../controllers/api/categoryController.js')
+const userController = require('../controllers/api/userController')
 
 router.get('/admin/restaurants/:id', adminController.getRestaurant)
 router.get('/admin/restaurants', adminController.getRestaurants)
@@ -21,5 +22,8 @@ router.post('/admin/categories', categoryController.postCategory)
 router.put('/admin/categories/:id', categoryController.putCategory)
 //管理者刪除分類
 router.delete('/admin/categories/:id', categoryController.deleteCategory)
+
+//JWT signin
+router.post('/signin', userController.signIn)
 
 module.exports = router
