@@ -33,46 +33,17 @@ const adminController = {
   },
 
 
-  //管理員權限(需保留一位)
-  toggleAdmin: async (req, res) => {
-    //判斷目前管理員數量
-    const adminVol = await
-      User.count({
-        where: {
-          isAdmin: {
-            [Op.eq]: true
-          }
-        }
-      })
-
-    return User.findByPk(req.params.id)
-      .then((user) => {
-        if (adminVol === 1 && user.isAdmin) {
-          req.flash('error_messages', '已為最後一位管理者')
-          return res.redirect('/admin/users')
-        } else {
-          //移除自己權限
-          if (Number(req.params.id) === helpers.getUser(req).id && user.isAdmin === true) {
-            user.update({
-              isAdmin: false
-            })
-            req.flash('success_messages', '您已成功自管理者移除')
-            return res.redirect('/restaurants')
-          } else {
-            isAdmin = !user.isAdmin ? true : false
-            return user.update({
-              isAdmin
-            })
-              .then(() => {
-                User.findAll({ raw: true, nest: true })
-                  .then(users => {
-                    return res.render('admin/users', { users })
-                  })
-              })
-          }
-        }
+  //編輯管理員權限(需保留一位)
+  toggleAdmin: (req, res) => {
+    adminService.toggleAdmin(req, res, data => {
+      if(data['status'] === 'error'){
+        req.flash('error_messages', data['message'])
+        return res.redirect('back')
+      } else {
+        req.flash('success_messages', data['message'])
+        return res.redirect('/admin/users')
       }
-      )
+    })
   },
 
 

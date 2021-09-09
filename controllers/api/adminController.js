@@ -40,13 +40,20 @@ const adminController = {
       return res.json(data)
     })
   },
-  
+
   //取得所有使用者
   getUsers: (req, res) => {
     adminService.getUsers(req, res, data => {
       return res.json(data)
     })
   },
+
+  //編輯管理員權限
+  toggleAdmin: (req, res) => {
+    adminService.toggleAdmin(req, res, data => {
+      return res.json(data)
+    })
+  }
 
 }
 

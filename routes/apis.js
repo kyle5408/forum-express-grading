@@ -32,6 +32,9 @@ router.put('/admin/restaurants/:id', authenticated, authenticatedAdmin, upload.s
 
 //管理者顯示所有使用者
 router.get('/admin/users', authenticated, authenticatedAdmin, adminController.getUsers)
+//管理者編輯使用者權限
+router.put('/admin/users/:id/toggleAdmin', authenticated, authenticatedAdmin, adminController.toggleAdmin)
+
 
 //管理者顯示所有分類
 router.get('/admin/categories', authenticated, authenticatedAdmin, categoryController.getCategories)
