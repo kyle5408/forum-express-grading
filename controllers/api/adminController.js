@@ -39,7 +39,15 @@ const adminController = {
     adminService.putRestaurant(req, res, data => {
       return res.json(data)
     })
-  }
+  },
+  
+  //取得所有使用者
+  getUsers: (req, res) => {
+    adminService.getUsers(req, res, data => {
+      return res.json(data)
+    })
+  },
+
 }
 
 module.exports = adminController

@@ -139,6 +139,14 @@ const adminService = {
     }
   },
 
+  //瀏覽所有使用者
+  getUsers: (req, res, callback) => {
+    return User.findAll({ raw: true, nest: true })
+      .then(users => {
+        callback({ users })
+      })
+  },
+
   //   editRestaurant: (req, res) => {
   //   Category.findAll({ raw: true, nest: true })
   //     .then(categories => {
@@ -149,13 +157,7 @@ const adminService = {
   //     })
   // },
 
-  // //瀏覽所有使用者
-  // getUsers: (req, res) => {
-  //   return User.findAll({ raw: true, nest: true })
-  //     .then(users => {
-  //       return res.render('admin/users', { users })
-  //     })
-  // },
+  
 
 
   // //管理員權限(需保留一位)

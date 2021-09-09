@@ -27,10 +27,9 @@ const adminController = {
 
   //瀏覽所有使用者
   getUsers: (req, res) => {
-    return User.findAll({ raw: true, nest: true })
-      .then(users => {
-        return res.render('admin/users', { users })
-      })
+    adminService.getUsers(req, res, data => {
+      return res.render('admin/users', data)
+    })
   },
 
 

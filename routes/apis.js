@@ -20,14 +20,21 @@ const authenticatedAdmin = (req, res, next) => {
 }
 
 router.get('/admin/restaurants/:id', authenticated, authenticatedAdmin, adminController.getRestaurant)
+//使用者顯示所有餐廳
 router.get('/admin/restaurants', authenticated, authenticatedAdmin,  adminController.getRestaurants)
-router.get('/admin/categories', authenticated, authenticatedAdmin,  categoryController.getCategories)
-//刪除餐廳
+
+//管理者刪除餐廳
 router.delete('/admin/restaurants/:id', authenticated, authenticatedAdmin,  adminController.deleteRestaurant)
-//建立餐廳
+//管理者新建某間餐廳
 router.post('/admin/restaurants', authenticated, authenticatedAdmin, upload.single('image'), adminController.postRestaurant)
 //管理者編輯某間餐廳
 router.put('/admin/restaurants/:id', authenticated, authenticatedAdmin, upload.single('image'), adminController.putRestaurant)
+
+//管理者顯示所有使用者
+router.get('/admin/users', authenticated, authenticatedAdmin, adminController.getUsers)
+
+//管理者顯示所有分類
+router.get('/admin/categories', authenticated, authenticatedAdmin, categoryController.getCategories)
 //管理者新增分類
 router.post('/admin/categories', authenticated, authenticatedAdmin,  categoryController.postCategory)
 //管理者編輯分類
